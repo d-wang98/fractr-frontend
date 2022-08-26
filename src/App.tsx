@@ -3,12 +3,19 @@ import "./App.css";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import Artwork from "./components/artwork";
 
+const { ServiceClient } = require("./pb/service/service_grpc_web_pb");
+
 const App = () => {
+  const client = new ServiceClient('http://localhost:8080', null, null);
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/artwork" element={<Artwork />} />
+          <Route 
+            path="/artwork/:artworkId" 
+            element={< Artwork client={client} />}
+          />
         </Routes>
       </BrowserRouter>
     

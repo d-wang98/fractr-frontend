@@ -136,6 +136,62 @@ proto.service.ServicePromiseClient.prototype.getArtworkDetails =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.service.GetArtworkLiveDataRequest,
+ *   !proto.service.GetArtworkLiveDataResponse>}
+ */
+const methodDescriptor_Service_GetArtworkLiveData = new grpc.web.MethodDescriptor(
+  '/service.Service/GetArtworkLiveData',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.service.GetArtworkLiveDataRequest,
+  proto.service.GetArtworkLiveDataResponse,
+  /**
+   * @param {!proto.service.GetArtworkLiveDataRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.service.GetArtworkLiveDataResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.service.GetArtworkLiveDataRequest} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.service.GetArtworkLiveDataResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.service.ServiceClient.prototype.getArtworkLiveData =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/service.Service/GetArtworkLiveData',
+      request,
+      metadata || {},
+      methodDescriptor_Service_GetArtworkLiveData);
+};
+
+
+/**
+ * @param {!proto.service.GetArtworkLiveDataRequest} request The request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.service.GetArtworkLiveDataResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.service.ServicePromiseClient.prototype.getArtworkLiveData =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/service.Service/GetArtworkLiveData',
+      request,
+      metadata || {},
+      methodDescriptor_Service_GetArtworkLiveData);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.service.GetArtworksByTitleRequest,
  *   !proto.service.GetArtworksByTitleResponse>}
  */
