@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "github.com/blidd/fractr-proto/service";
+
+import "marketplace_common/marketplace_common.proto";
+
+message Artist {
+    uint32 id = 1;
+    string name = 2;
+    string description = 3;
+    string handle = 4;
+}
+
+enum Market {
+    PRIMARY = 0;
+    SECONDARY = 1;
+}
+
+message Artwork {
+    uint32 id = 1;
+    Artist artist = 2;
+    string name = 3;
+    repeated uint32 owner_ids = 4;
+    string description = 5;
+    uint32 num_shares = 6;
+    Market market = 7;
+    uint32 conversion_date = 8;
+}
+
+message ArtworkLiveMarketData {
+    uint32 artwork_id = 1;
+    uint32 last_updated = 2;
+    uint32 hi_bid_price = 3;
+    uint32 lo_ask_price = 4;
+    uint32 last_tx_price = 5;
+
+    uint32 num_shares_available = 6;
+
+    repeated marketplace_common.Bid bids = 7;
+    repeated marketplace_common.Ask asks = 8;
+}
+
+message Shard {
+    uint32 artwork_id = 1;
+    uint32 owner_id = 2;
+    repeated uint32 token_ids = 3;
+}
+
+message GetArtworkDetailsRequest {
+    uint32 artwork_id = 1;
+}
+
+message GetArtworkDetailsResponse {
+    Artwork artwork_details = 1;
+}
+
+message GetArtworksByTitleRequest {
+    string title = 1;
+}
+
+message GetArtworksByTitleResponse {
+    repeated Artwork artworks = 1;
+}
+
+message GetArtworksByArtistRequest {
+    string artist_name = 1;
+}
+
+message GetArtworksByArtistResponse {
+    repeated Artwork artworks = 1;
+}
+
+message GetArtistsByNameRequest {
+    string name = 1;
+}
+
+message GetArtistsByNameResponse {
+    repeated Artist artists = 1;
+}
+
+message UserProfile {
+    uint32 user_id = 1;
+    optional uint32 artist_id = 2;
+    repeated marketplace_common.Bid current_bids = 3;
+    repeated marketplace_common.Ask current_asks = 4;
+    repeated Shard owned_shards = 5;
+    repeated uint32 saved_artist_ids = 6;
+    repeated uint32 saved_artwork_ids = 7;
+}
+
+message GetUserProfileRequest {
+    uint32 user_id = 1;
+}
+
+message GetUserProfileResponse {
+    UserProfile profile = 1;
+}
+
+message CreateUserProfileRequest {
+    string username = 1;
+    string pw_hash = 2;
+    bool is_artist = 3;
+    // near wallet info
+}
+
+message CreateUserProfileResponse {
+    UserProfile profile = 1;
+}
+
+message BidRequest {
+    marketplace_common.Bid bid = 1;
+    Market market = 2;
+}
+
+message BidResponse {
+    marketplace_common.BidStatus status = 1;
+}
+
+message GetBidsRequest {
+    repeated uint32 bid_ids = 1;
+}
+
+message GetBidsResponse {
+    repeated marketplace_common.BidStatus bid_statuses = 1;
+}
+
+message AskRequest {
+    marketplace_common.Ask ask = 1;
+    Market market = 2;
+}
+
+message AskResponse {
+    marketplace_common.AskStatus status = 1;
+}
+
+message GetAsksRequest {
+    repeated uint32 ask_ids = 1;
+}
+
+message GetAsksResponse {
+    repeated marketplace_common.AskStatus ask_statuses = 1;
+}
+
+service Service {
+    rpc GetArtworkDetails(GetArtworkDetailsRequest) returns (GetArtworkDetailsResponse);
+
+    rpc GetArtworksByTitle(GetArtworksByTitleRequest) returns (GetArtworksByTitleResponse);
+    rpc GetArtworksByArtist(GetArtworksByArtistRequest) returns (GetArtworksByArtistResponse);
+
+    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+    rpc CreateUserProfile(CreateUserProfileRequest) returns (CreateUserProfileResponse);
+
+    rpc Bid(BidRequest) returns (BidResponse);
+    rpc Ask(AskRequest) returns (AskResponse);
+    
+    rpc GetBids(GetBidsRequest) returns (GetBidsResponse);
+    rpc GetAsks(GetAsksRequest) returns (GetAsksResponse);
+}
